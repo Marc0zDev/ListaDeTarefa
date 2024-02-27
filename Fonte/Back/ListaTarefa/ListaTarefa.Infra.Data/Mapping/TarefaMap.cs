@@ -31,7 +31,7 @@ namespace ListaTarefa.Infra.Data.Mapping
             builder.Property(x => x.DataVencimento)
                 .IsRequired()
                 .HasColumnName("data_vencimento")
-                .HasColumnType("datetime()");
+                .HasColumnType("timestamp with time zone");
 
             builder.Property(x => x.Status)
                 .HasColumnName("status");

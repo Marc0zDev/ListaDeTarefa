@@ -76,6 +76,7 @@ namespace ListaTarefa.Service.Service
         {
             if (obj == null)
                 throw new Exception($"'{typeof(TEntity).FullName}' não pode ser nulo.");
+
             Validate(obj, Activator.CreateInstance<TValidator>());
             Repository.Update(obj);
             return obj;

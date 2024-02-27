@@ -1,7 +1,9 @@
 using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Interfaces.IRepository;
+using ListaTarefa.Domain.Interfaces.IServices;
 using ListaTarefa.Infra.Data.Context;
 using ListaTarefa.Infra.Data.Repository;
+using ListaTarefa.Service.Service;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString, b => b.MigrationsAssembly("ListaTarefa.Infra.Data")));
 
 builder.Services.AddScoped<IBaseRepository<Tarefa>, BaseRepository<Tarefa>>();
+builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+builder.Services.AddScoped<ITarefaService, TarefaService>();
 
 var app = builder.Build();
 

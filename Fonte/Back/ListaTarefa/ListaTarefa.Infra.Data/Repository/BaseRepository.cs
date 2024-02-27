@@ -78,6 +78,7 @@ namespace ListaTarefa.Infra.Data.Repository
             try
             {
                 _context.Set<TEntity>().Update(obj);
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {

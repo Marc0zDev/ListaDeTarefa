@@ -1,4 +1,5 @@
 ﻿using ListaTarefa.Domain.Entities;
+using ListaTarefa.Domain.Enums;
 using ListaTarefa.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,6 +23,11 @@ namespace ListaTarefa.Infra.Data.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Tarefa>(new TarefaMap().Configure);
+
+            modelBuilder
+                .Entity<Tarefa>()
+                .Property(e => e.Status)
+                .HasConversion<string>();
         }
 
 
