@@ -1,4 +1,5 @@
-﻿using ListaTarefa.Domain.Entities;
+﻿using ListaTarefa.Domain.DTOs;
+using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ namespace ListaTarefa.Domain.Interfaces.IServices
 {
     public interface ITarefaService : IBaseService<Tarefa>
     {
-        IList<Tarefa> GetTarefaByStatus(StatusTarefa status);
-        IList<Tarefa> GetTarefaDiaHoje();
+        IList<TarefaDTO> GetTarefaByStatus(StatusTarefa status);
+        IList<TarefaDTO> GetTarefaDiaHoje();
 
     }
 }

@@ -1,3 +1,4 @@
+using ListaTarefa.Domain.DTOs.Mapping;
 using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Interfaces.IRepository;
 using ListaTarefa.Domain.Interfaces.IServices;
@@ -24,6 +25,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IBaseRepository<Tarefa>, BaseRepository<Tarefa>>();
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
+
+builder.Services.AddAutoMapper(typeof(TarefaMappingDTO));
 
 
 builder.Services.AddCors();

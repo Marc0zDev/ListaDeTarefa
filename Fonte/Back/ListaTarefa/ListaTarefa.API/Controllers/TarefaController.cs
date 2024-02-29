@@ -1,4 +1,6 @@
-﻿using ListaTarefa.Domain.Entities;
+﻿using AutoMapper;
+using ListaTarefa.Domain.DTOs;
+using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IServices;
 using ListaTarefa.Service.Validators;
@@ -12,14 +14,16 @@ namespace ListaTarefa.API.Controllers
     public class TarefaController : ControllerBase
     {
         private readonly ITarefaService _tarefaService;
+        private readonly IMapper _mapper;
 
-        public TarefaController(ITarefaService tarefaService)
+        public TarefaController(ITarefaService tarefaService, IMapper mapper)
         {
             _tarefaService = tarefaService;
+            _mapper = mapper;
         }
 
         [HttpGet("BuscarTodasTarefas")]
-        public IActionResult GetAll()
+        public ActionResult<List<TarefaDTO>> GetAll()
         {
             try
             {
@@ -27,7 +31,8 @@ namespace ListaTarefa.API.Controllers
                     return BadRequest(ModelState);
                 
                 var tarefas = _tarefaService.GetAll();
-                return Ok(tarefas);
+                var tarefaDTO = _mapper.Map<List<TarefaDTO>>(tarefas);
+                return Ok(tarefaDTO);
             }
             catch (System.Exception ex)
             {
@@ -36,7 +41,7 @@ namespace ListaTarefa.API.Controllers
         }
 
         [HttpGet("BuscarTarefaById/{id}")]
-        public IActionResult GetById(int id)
+        public ActionResult<TarefaDTO> GetById(int id)
         {
             try
             {
@@ -47,6 +52,8 @@ namespace ListaTarefa.API.Controllers
                 if (tarefa == null)
                     return NotFound("Tarefa não encontrada.");
 
+                var tarefaDTO = _mapper.Map<TarefaDTO>(tarefa);
+                
                 return Ok(tarefa);
             }
             catch (System.Exception ex)
@@ -56,14 +63,16 @@ namespace ListaTarefa.API.Controllers
         }
 
         [HttpPost("AdicionarTarefa")]
-        public IActionResult Add([FromBody] Tarefa tarefa)
+        public IActionResult Add([FromBody] TarefaDTO tarefa)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                _tarefaService.Add<TarefaValidator>(tarefa);
+                var tarefaSave = _mapper.Map<Tarefa>(tarefa);
+                _tarefaService.Add<TarefaValidator>(tarefaSave);
+
                 return Ok(new { Message = "Tarefa Criada com sucesso" });
             }
             catch (System.Exception ex)
@@ -73,14 +82,15 @@ namespace ListaTarefa.API.Controllers
         }
 
         [HttpPut("AtualizarTarefa")]
-        public IActionResult Update([FromBody] Tarefa tarefa)
+        public IActionResult Update([FromBody] TarefaDTO tarefa)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                _tarefaService.Update<TarefaValidator>(tarefa);
+                var _tarefa = _mapper.Map<Tarefa>(tarefa);
+                _tarefaService.Update<TarefaValidator>(_tarefa);
                 return Ok(new { Message = "Tarefa Atualizada com sucesso!" });
             }
             catch (System.Exception ex)
