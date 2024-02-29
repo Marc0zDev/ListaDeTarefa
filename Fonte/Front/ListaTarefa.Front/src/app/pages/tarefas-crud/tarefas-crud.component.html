@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="row">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Ações de Gerenciamento</mat-card-title>
+            </mat-card-header>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="openCreateDialog()">Criar Tarefa</button>
+                <button mat-raised-button color="accent" style="margin-left: 1%;">Excluir tarefa</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="row" style="margin-top: 2%;">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="Titulo">
+                <th mat-header-cell *matHeaderCellDef> Titulo da Tarefa </th>
+                <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Descrição">
+                <th mat-header-cell *matHeaderCellDef> Descrição da Tarefa </th>
+                <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="DatadeVencimento">
+                <th mat-header-cell *matHeaderCellDef> Data de Vencimento </th>
+                <td mat-cell *matCellDef="let element"> {{ element.dataVencimento | date:'dd/MM/yyyy' }} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="Status">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.status === 1" class="badge rounded-pill bg-danger">Pendente</span> 
+                    <span *ngIf="element.status === 2" class="badge rounded-pill bg-primary">Em Andamento</span> 
+                    <span *ngIf="element.status === 3" class="badge rounded-pill bg-secondary">Concluida</span> 
+                    </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Ações">
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="primary" (click)="openEditDialog(element)">Editar</button>
+                    <button mat-raised-button color="accent" style="margin-left: 1%;" (click)="openDeleteDialog(element)">Excluir</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 ﻿using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Interfaces.IRepository;
 using ListaTarefa.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace ListaTarefa.Infra.Data.Repository
         {
             try
             {
-                _context.Set<TEntity>().Update(obj);
+                _context.Entry(obj).State = EntityState.Modified;
                 _context.SaveChanges();
             }
             catch (Exception ex)

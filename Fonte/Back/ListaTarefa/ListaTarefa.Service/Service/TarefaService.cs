@@ -27,5 +27,26 @@ namespace ListaTarefa.Service.Service
 
             return listaTarefas;
         }
+
+        public IList<Tarefa> GetTarefaDiaHoje()
+        {
+            try
+            {
+                var listaHoje = Repository.GetTarefaDiaHoje().ToList();
+
+                foreach (var tarefa in listaHoje)
+                { 
+
+                    var formato = tarefa.DataVencimento.ToString("dd/MM/yyyy");
+                    tarefa.DataVencimento = Convert.ToDateTime(formato);
+                }
+
+                return listaHoje;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+            }
+        }
     }
 }

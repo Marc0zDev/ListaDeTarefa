@@ -64,7 +64,7 @@ namespace ListaTarefa.API.Controllers
                     return BadRequest(ModelState);
 
                 _tarefaService.Add<TarefaValidator>(tarefa);
-                return Ok("Tarefa adicionada com sucesso!");
+                return Ok(new { Message = "Tarefa Criada com sucesso" });
             }
             catch (System.Exception ex)
             {
@@ -81,7 +81,7 @@ namespace ListaTarefa.API.Controllers
                     return BadRequest(ModelState);
 
                 _tarefaService.Update<TarefaValidator>(tarefa);
-                return Ok("Tarefa atualizada com sucesso!");
+                return Ok(new { Message = "Tarefa Atualizada com sucesso!" });
             }
             catch (System.Exception ex)
             {
@@ -98,7 +98,7 @@ namespace ListaTarefa.API.Controllers
                     return BadRequest(ModelState);
 
                 _tarefaService.Delete(id);
-                return Ok("Tarefa deletada com sucesso!");
+                return Ok(new { Message = "Tarefa deletada com sucesso!" });
             }
             catch (System.Exception ex)
             {
@@ -123,5 +123,21 @@ namespace ListaTarefa.API.Controllers
             }
         }
 
+        [HttpGet("BuscarTarefaDiaHoje")]
+        public IActionResult GetTarefaDiaHoje()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var tarefas = _tarefaService.GetTarefaDiaHoje();
+
+                return Ok(tarefas);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

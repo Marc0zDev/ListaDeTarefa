@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>{{ isEdicao ? 'Editar Tarefa' : 'Cadastrar Tarefa' }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form #form="ngForm" style="display: flex; flex-direction: column; align-items: center;">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Título</mat-label>
+      <input matInput placeholder="Título" name="titulo" [(ngModel)]="data.titulo" required>
+    </mat-form-field>
+    <br> 
+    <mat-form-field style="width: 100%;">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput placeholder="Descrição" name="descricao" [(ngModel)]="data.descricao" required></textarea>
+    </mat-form-field>
+    <br> 
+    <mat-form-field style="width: 100%;">
+      <mat-label>Data de Vencimento</mat-label>
+      <input matInput [matDatepicker]="picker" name="dataVencimento" [(ngModel)]="data.dataVencimento" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <br>
+    <mat-form-field style="width: 100%;">
+      <mat-label>Status</mat-label>
+      <mat-select name="status" [(ngModel)]="data.status" required>
+        <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+          {{ status.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" (click)="salvarTarefa(form)"  [disabled]="!form.valid">{{ isEdicao ? 'Salvar' : 'Cadastrar' }}</button>
+</mat-dialog-actions>

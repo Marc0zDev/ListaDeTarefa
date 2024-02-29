@@ -29,7 +29,7 @@ namespace ListaTarefa.Service.Validators
 
         private static bool IsDataFutura(DateTime dataVencimento)
         {
-            return dataVencimento >= DateTime.Now;
+            return dataVencimento >= DateTime.Today;
         }
     }
 }

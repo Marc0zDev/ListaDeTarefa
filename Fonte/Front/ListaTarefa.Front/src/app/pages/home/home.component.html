@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-xl-6 mx-auto"> 
+            <div class="card" style="margin-left: 10px; background-color: #f8f9fa;">
+                <h5 style="margin-left: 1%;">Tarefas de Hoje</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Descrição</th>
+                                <th>Data de vencimento</th>
+                                <th>Status</th>
+                                <th>Ação</th> <!-- Nova coluna para o botão de mudar status -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let tarefa of tarefas">
+                                <td style="width: 15%; min-width: 5rem;">{{ tarefa.titulo }}</td>
+                                <td style="width: 35%; min-width: 8rem;">{{ tarefa.descricao }}</td>
+                                <td style="width: 20%; min-width: 8rem;">{{ tarefa.dataVencimento | date:'dd/MM/yyyy' }}</td>
+                                <td style="width: 15%;">
+                                    <span *ngIf="tarefa.status === 1" class="badge text-bg-warning">Pendente</span>
+                                    <span *ngIf="tarefa.status === 2" class="badge text-bg-primary">Em Andamento</span>
+                                    <span *ngIf="tarefa.status === 3" class="badge text-bg-success">Concluida</span>
+                                </td>
+                                <td style="width: 15%;">
+                                    <button type="button" class="btn btn-sm btn-info" (click)="mudarStatusTarefa(tarefa)">
+                                        Mudar Status
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

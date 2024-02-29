@@ -11,5 +11,7 @@ namespace ListaTarefa.Domain.Interfaces.IServices
     public interface ITarefaService : IBaseService<Tarefa>
     {
         IList<Tarefa> GetTarefaByStatus(StatusTarefa status);
+        IList<Tarefa> GetTarefaDiaHoje();
+
     }
 }
