@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>I{{tarefa.titulo}}</h2>
+<mat-dialog-content class="mat-typography">
+    <ul>
+        <li>
+          {{tarefa.descricao}}
+        </li>
+        <li>
+            <span *ngIf="tarefa.status === 1" class="badge text-bg-warning">Pendente</span>
+            <span *ngIf="tarefa.status === 2" class="badge text-bg-primary">Em Andamento</span>
+            <span *ngIf="tarefa.status === 3" class="badge text-bg-success">Concluida</span>
+        </li>
+        <li>
+          {{tarefa.dataVencimento | date:'dd/MM/yyyy'}}
+        </li>
+      </ul>
+
+  
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>

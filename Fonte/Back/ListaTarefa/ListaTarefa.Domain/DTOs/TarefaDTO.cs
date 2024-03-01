@@ -14,8 +14,6 @@ namespace ListaTarefa.Domain.DTOs
         public string Descricao { get; set; }
         public DateTime DataVencimento { get; set; }
         public StatusTarefa Status { get; set; }
-
-        public string emailResposavel { get; set; }
     }
 
 }

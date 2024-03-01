@@ -1,3 +1,4 @@
+import { ModalVisualizarComponent } from './pages/tarefas-crud/modal-visualizar/modal-visualizar.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -31,6 +32,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatIconModule} from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     LayoutComponent,
     TarefasCrudComponent,
     ModalExcluirComponent,
-    ModalAdicionarComponent
+    ModalAdicionarComponent,
+    ModalVisualizarComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +65,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ButtonModule ,
     MatTableModule,
     MatPaginatorModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatIconModule
   ],
   providers: [
     provideAnimationsAsync()
