@@ -5,11 +5,14 @@ using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IRepository;
 using ListaTarefa.Domain.Interfaces.IServices;
 using ListaTarefa.Domain.Pagination.Filters;
+
+
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ListaTarefa.Service.Service
@@ -27,12 +30,20 @@ namespace ListaTarefa.Service.Service
 
         public IList<TarefaDTO> GetTarefaByStatus(StatusTarefa status)
         {
-            var listaTarefas = Repository.GetTarefaByStatus(status);
-            var listaTarefasDTO = _mapper.Map<IList<TarefaDTO>>(listaTarefas);
-            if (listaTarefas == null)
-                throw new Exception("Nenhuma tarefa encontrada");
+            try
+            {
+                var listaTarefas = Repository.GetTarefaByStatus(status);
+                var listaTarefasDTO = _mapper.Map<IList<TarefaDTO>>(listaTarefas);
+                if (listaTarefas == null)
+                    throw new Exception("Nenhuma tarefa encontrada");
 
-            return listaTarefasDTO;
+                return listaTarefasDTO;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            
         }
 
         public IList<TarefaDTO> GetTarefaDiaHoje()
@@ -52,7 +63,7 @@ namespace ListaTarefa.Service.Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+                throw ex;
             }
         }
 
@@ -63,14 +74,18 @@ namespace ListaTarefa.Service.Service
             try
             {
                 var tarefas = Repository.GetTarefas(tarefaParameters);
+                
+
                 if (tarefas == null)
                     throw new Exception("Nenhuma tarefa encontrada");
+
+
 
                 return tarefas;
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+                throw new Exception(ex.Message, ex);
             }
         }
     }

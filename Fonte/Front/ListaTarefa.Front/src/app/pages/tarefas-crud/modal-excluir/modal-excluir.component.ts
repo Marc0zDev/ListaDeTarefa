@@ -22,9 +22,6 @@ export class ModalExcluirComponent {
     this.tarefaService.excluirTarefa(this.tarefa).then(() => {
       this.dialogRef.close();
       this.change.detectChanges();
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this.router.navigate([this.router.url]);
-      });
     });
   }
 }

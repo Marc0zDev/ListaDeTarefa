@@ -27,12 +27,16 @@ namespace ListaTarefa.Infra.Data.Repository
             try
             {
                 if (status <= 0)
-                    throw new Exception("Status inválido");
+                    throw new ArgumentException("O status fornecido é inválido. Certifique-se de que o status seja um valor válido.");
                 return _context.Tarefas.Where(x => (x.Status == status)).ToList();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException("Ocorreu um erro ao selecionar as tarefas por status: " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+                throw new Exception("Ocorreu um erro ao selecionar as tarefas por status: " + ex.Message , ex);
             }
         }
 
@@ -54,7 +58,7 @@ namespace ListaTarefa.Infra.Data.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+                throw new Exception("Ocorreu um erro ao recuperar as tarefas de hoje: " + ex.Message, ex);
             }
         }
 
@@ -63,26 +67,25 @@ namespace ListaTarefa.Infra.Data.Repository
             try
             {
                 var tarefa = _context.Tarefas.AsQueryable();
-                if (!string.IsNullOrEmpty(tarefaParameters.Status))
+                if (!string.IsNullOrEmpty(tarefaParameters.Status) && Enum.TryParse(tarefaParameters.Status, out StatusTarefa status))
                 {
-                    if (Enum.TryParse(tarefaParameters.Status, out StatusTarefa status))
-                    {
-                        
-                        tarefa = tarefa.Where(t => t.Status == status);
-                    }
+                    tarefa = tarefa.Where(t => t.Status == status);
                 }
                 if (!string.IsNullOrEmpty(tarefaParameters.Titulo))
                 {
                     tarefa = tarefa.Where(t => t.Titulo.Contains(tarefaParameters.Titulo));
                 }
-                if(tarefa == null) { throw new Exception("Nenhuma tarefa encontrada.");}
 
                 var pagedList = PagedList<Tarefa>.ToPagedList(tarefa.ToList(), tarefaParameters.PageNumber, tarefaParameters.PageSize);
+                if (pagedList.Count == 0)
+                {
+                    throw new Exception("Nenhuma tarefa encontrada.");
+                }
                 return pagedList;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+                throw new Exception("Ocorreu um erro ao buscar as tarefas: " + ex.Message, ex);
             }
         }
     }

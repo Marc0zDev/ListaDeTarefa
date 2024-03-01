@@ -1,6 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { TarefaPageMessage } from './../model/_pageMessage/tarefaPageMessage';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tarefa } from '../model/tarefa';
+import { TarefaFilter } from '../model/tarefaFilter';
 
 @Injectable({
   providedIn: 'root',
@@ -85,20 +87,27 @@ export class TarefaServiceService {
     });
   }
   
-  buscarTarefasComPaginacao(tarefaParameters: any): Promise<Tarefa[]> {
-    return new Promise<Tarefa[]>((resolve, reject) => {
-      const params = new HttpParams({ fromObject: tarefaParameters });
-      this.http
-        .get<Tarefa[]>(`${this.API}/BuscarTarefas`, { params })
+  buscarTarefas(tarefaParameters: TarefaFilter, pagina: any, tamanho: any): Promise<TarefaPageMessage> {
+    const data = {
+      pageNumber: pagina,
+      pageSize: tamanho,
+      titulo: tarefaParameters.titulo,
+      status: tarefaParameters.status
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return new Promise<TarefaPageMessage>((resolve, reject) => {
+      this.http.post(this.API + '/BuscarTarefas', data, { headers})
         .toPromise()
         .then((response) => {
-          resolve(response as Tarefa[]);
+          resolve(response as TarefaPageMessage); ;
         })
         .catch((error) => {
           reject(error);
         });
     });
   }
-  
-  
 }

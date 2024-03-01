@@ -4,6 +4,7 @@ import { TarefaServiceService } from '../../../core/services/tarefa.service';
 import { NgForm } from '@angular/forms';
 import { Tarefa } from '../../../core/model/tarefa';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-modal-adicionar',
@@ -24,7 +25,8 @@ export class ModalAdicionarComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private tarefaService: TarefaServiceService,
     private change: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) {
     if (data.id != 0) {
       this.isEdicao = true;
@@ -44,11 +46,7 @@ export class ModalAdicionarComponent {
       if (this.isEdicao) {
         this.tarefaService.atualizarTarefa(this.tarefa).then(() => {
           this.dialogRef.close();
-          this.router
-            .navigateByUrl('/tarefas', { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([this.router.url]);
-            });
+          
         });
       } else {
         this.tarefaService.cadastrarTarefa(this.tarefa).then(() => {

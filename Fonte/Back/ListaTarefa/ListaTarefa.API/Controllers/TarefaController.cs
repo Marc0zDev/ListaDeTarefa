@@ -4,9 +4,12 @@ using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IServices;
 using ListaTarefa.Domain.Pagination.Filters;
+using ListaTarefa.Domain.Pagination.Paging;
 using ListaTarefa.Service.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+
 
 namespace ListaTarefa.API.Controllers
 {
@@ -151,15 +154,27 @@ namespace ListaTarefa.API.Controllers
             }
         }
 
-        [HttpGet("BuscarTarefas")]
-        public IActionResult GetTarefas([FromQuery] TarefaFiltro tarefaParameters)
+        [HttpPost("BuscarTarefas")]
+        public IActionResult GetTarefas([FromBody] TarefaFiltro tarefaParameters)
         {
             try
             {
-                if (!ModelState.IsValid)
+                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 var tarefas = _tarefaService.GetTarefas(tarefaParameters);
-                return Ok(tarefas);
+                TarefaPageMessage tarefaPageMessage = new TarefaPageMessage
+                {
+                    PageNumber = tarefas.CurrentPage,
+                    PageSize = tarefas.PageSize,
+                    TotalCount = tarefas.TotalCount,
+                    TotalPages = tarefas.TotalPages,
+                    HasPrevious = tarefas.HasPrevious,
+                    HasNext = tarefas.HasNext,
+                    Items = tarefas
+                };
+                
+
+                return Ok(tarefaPageMessage);
             }
             catch (System.Exception ex)
             {

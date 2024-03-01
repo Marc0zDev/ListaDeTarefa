@@ -1,3 +1,6 @@
+import { TarefaPageMessage } from './../../core/model/_pageMessage/tarefaPageMessage';
+import { HttpHeaders } from '@angular/common/http';
+import { TarefaFilter } from './../../core/model/tarefaFilter';
 import { Tarefa } from './../../core/model/tarefa';
 import { TarefaServiceService } from './../../core/services/tarefa.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
@@ -7,6 +10,8 @@ import { ModalAdicionarComponent } from './modal-adicionar/modal-adicionar.compo
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tarefas-crud',
@@ -16,13 +21,20 @@ import { MatPaginator } from '@angular/material/paginator';
 export class TarefasCrudComponent implements OnInit{
    displayedColumns: string[] = ['Titulo', 'Descrição', 'DatadeVencimento', 'Status', 'Ações'];
    dataSource = new MatTableDataSource<Tarefa>();
+   tarefaFilter: TarefaFilter = {};
 
-   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
+   statusOptions = [
+    { label: 'Pendente', value: 'Pendente' },
+    { label: 'Em Andamento', value: 'EmAndamento' },
+    { label: 'Concluída', value: 'Concluida' }
+  ];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(private tarefaService: TarefaServiceService, 
       private change: ChangeDetectorRef,
       private modal: MatDialog,
-      private router: Router
+      private router: Router,
+      private _snackBar: MatSnackBar
     ) { }
 
     ngOnInit(): void {
@@ -31,14 +43,29 @@ export class TarefasCrudComponent implements OnInit{
       }
       this.loadTarefas();
     }
+
+    ngAfterViewInit() {
+      this.dataSource.paginator = this.paginator;
+      this.loadTarefas();
+    }
     
     
 
-  loadTarefas(): void {
-    this.tarefaService.listarTarefas().then((response) => {
-      this.dataSource.data = response;
-    });
-  }
+    loadTarefas(): void {
+      this.tarefaService.buscarTarefas(this.tarefaFilter, this.paginator.pageIndex + 1, this.paginator.pageSize)
+        .then((response) => {
+          this.dataSource = new MatTableDataSource(response.items as Tarefa[]);
+          this.paginator.pageIndex = response.pageNumber;
+          this.paginator.pageSize = response.pageSize;
+          this.paginator.length = response.totalCount;
+          this.dataSource.paginator = this.paginator;
+
+        })
+        .catch((error: { error: string; }) => {
+          console.log(error);
+          this._snackBar.open(error.error, 'Fechar', { duration: 2000 });
+        });
+    }
 
   openDeleteDialog(tarefa: Tarefa): void {
     const dialogRef = this.modal.open(ModalExcluirComponent, {
@@ -47,7 +74,12 @@ export class TarefasCrudComponent implements OnInit{
     });
     
     this.loadTarefas();
-    this.change.detectChanges();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadTarefas();
+      }
+      this._snackBar.open("Tarefa Excluida!", 'Fechar', { duration: 2000 });
+    });
   }
 
   openEditDialog(tarefa: Tarefa): void {
@@ -60,6 +92,7 @@ export class TarefasCrudComponent implements OnInit{
       if (result) {
         this.loadTarefas();
       }
+      this._snackBar.open("Tarefa Editada!", 'Fechar', { duration: 2000 });
     });
 }
 
@@ -71,24 +104,24 @@ openCreateDialog(): void {
     });
    
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadTarefas();
-      }
+      this.loadTarefas();
+      this._snackBar.open("Tarefa Criada!", 'Fechar', { duration: 2000 });
     });
 }
 
-  filterByStatus(status: number): void {
-    if(status == 0) {
-      this.loadTarefas();
-      console.log('teste');
-    }else{
-      this.tarefaService.buscarTarefaPorStatus(status).then((response) => {
-        this.dataSource.data = response;
-      }).catch((error) => {
-        console.error(error);
-      })
-    }
+  filter(): void {
+    this.loadTarefas();
     
   }
 
+  limparFiltros() {
+		this.tarefaFilter = new TarefaFilter();
+		this.loadTarefas();
+	}
+  onPageChange(event: any) {
+    this.paginator.pageIndex = event.pageIndex;
+    this.loadTarefas();
+  }
+  
+  
 }
