@@ -162,19 +162,10 @@ namespace ListaTarefa.API.Controllers
                  if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 var tarefas = _tarefaService.GetTarefas(tarefaParameters);
-                TarefaPageMessage tarefaPageMessage = new TarefaPageMessage
-                {
-                    PageNumber = tarefas.CurrentPage,
-                    PageSize = tarefas.PageSize,
-                    TotalCount = tarefas.TotalCount,
-                    TotalPages = tarefas.TotalPages,
-                    HasPrevious = tarefas.HasPrevious,
-                    HasNext = tarefas.HasNext,
-                    Items = tarefas
-                };
+                
                 
 
-                return Ok(tarefaPageMessage);
+                return Ok(tarefas);
             }
             catch (System.Exception ex)
             {

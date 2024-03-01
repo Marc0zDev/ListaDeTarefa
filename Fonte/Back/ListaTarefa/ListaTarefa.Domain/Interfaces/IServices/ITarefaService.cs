@@ -3,6 +3,7 @@ using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Pagination;
 using ListaTarefa.Domain.Pagination.Filters;
+using ListaTarefa.Domain.Pagination.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,6 @@ namespace ListaTarefa.Domain.Interfaces.IServices
     {
         IList<TarefaDTO> GetTarefaByStatus(StatusTarefa status);
         IList<TarefaDTO> GetTarefaDiaHoje();
-        PagedList<Tarefa> GetTarefas(TarefaFiltro tarefaParameters);
+        TarefaPageMessage GetTarefas(TarefaFiltro tarefaParameters);
     }
 }
