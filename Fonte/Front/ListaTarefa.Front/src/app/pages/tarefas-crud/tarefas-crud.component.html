@@ -7,9 +7,22 @@
             <mat-card-actions>
                 <button mat-raised-button color="primary" (click)="openCreateDialog()">Criar Tarefa</button>
                 <button mat-raised-button color="accent" style="margin-left: 1%;">Excluir tarefa</button>
+                <div class="status-select" style="margin-left: auto;">
+                    <mat-form-field>
+                        <mat-label>Filtro por Status</mat-label>
+                        <mat-select (selectionChange)="filterByStatus($event.value)">
+                            <mat-option value="2">Em Andamento</mat-option>
+                            <mat-option value="3">Concluído</mat-option>
+                            <mat-option value="1">Pendente</mat-option>
+                            <mat-option value="0">Todos</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </mat-card-actions>
         </mat-card>
     </div>
+    
+    
     <div class="row" style="margin-top: 2%;">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
@@ -55,5 +68,9 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Selecione a quantidade de elementos">
+        </mat-paginator>
     </div>
 </div>

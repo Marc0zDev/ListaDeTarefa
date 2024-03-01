@@ -1,10 +1,12 @@
 import { Tarefa } from './../../core/model/tarefa';
 import { TarefaServiceService } from './../../core/services/tarefa.service';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalExcluirComponent } from './modal-excluir/modal-excluir.component';
 import { ModalAdicionarComponent } from './modal-adicionar/modal-adicionar.component';
 import { Router } from '@angular/router';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-tarefas-crud',
@@ -12,8 +14,10 @@ import { Router } from '@angular/router';
   styleUrl: './tarefas-crud.component.scss'
 })
 export class TarefasCrudComponent implements OnInit{
-  dataSource: Tarefa[] = [];
    displayedColumns: string[] = ['Titulo', 'Descrição', 'DatadeVencimento', 'Status', 'Ações'];
+   dataSource = new MatTableDataSource<Tarefa>();
+
+   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
     constructor(private tarefaService: TarefaServiceService, 
       private change: ChangeDetectorRef,
@@ -21,9 +25,18 @@ export class TarefasCrudComponent implements OnInit{
       private router: Router
     ) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
+      if (this.paginator) {
+        this.dataSource.paginator = this.paginator;
+      }
+      this.loadTarefas();
+    }
+    
+    
+
+  loadTarefas(): void {
     this.tarefaService.listarTarefas().then((response) => {
-      this.dataSource = response;
+      this.dataSource.data = response;
     });
   }
 
@@ -32,6 +45,9 @@ export class TarefasCrudComponent implements OnInit{
       width: '450px',
       data: tarefa
     });
+    
+    this.loadTarefas();
+    this.change.detectChanges();
   }
 
   openEditDialog(tarefa: Tarefa): void {
@@ -39,29 +55,40 @@ export class TarefasCrudComponent implements OnInit{
       width: '70%',
       data: {...tarefa}
     });
-    this.change.detectChanges();
-    this.router
-            .navigateByUrl('/tarefas', { skipLocationChange: true })
-            .then(() => {
-              this.router.navigate([this.router.url]);
-            });
-  }
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadTarefas();
+      }
+    });
+}
 
-  openCreateDialog(): void {
+openCreateDialog(): void {
     const tarefa = {id: 0} as Tarefa;
     const dialogRef = this.modal.open(ModalAdicionarComponent, {
       width: '70%',
       data: tarefa
     });
-
+   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Atualiza a página após fechar o diálogo
-        this.router.navigateByUrl('/tarefas', { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/tarefas']);
-        });
+        this.loadTarefas();
       }
     });
+}
+
+  filterByStatus(status: number): void {
+    if(status == 0) {
+      this.loadTarefas();
+      console.log('teste');
+    }else{
+      this.tarefaService.buscarTarefaPorStatus(status).then((response) => {
+        this.dataSource.data = response;
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
+    
   }
 
 }

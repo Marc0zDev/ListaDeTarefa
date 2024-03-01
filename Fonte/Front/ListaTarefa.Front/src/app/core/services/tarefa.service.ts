@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Tarefa } from '../model/tarefa';
 
@@ -69,6 +69,35 @@ export class TarefaServiceService {
   atualizarTarefa(tarefa: Tarefa): Promise<any> {
     const url = `${this.API}/AtualizarTarefa`;
     return this.http.put<any>(url, tarefa).toPromise();
+  }
+
+  buscarTarefaPorStatus(status: number): Promise<Tarefa[]> {
+    return new Promise<Tarefa[]>((resolve, reject) => {
+      this.http
+        .get<Tarefa[]>(this.API + '/BuscarTarefaByStatus/' + status)
+        .toPromise()
+        .then((response) => {
+          resolve(response as Tarefa[]);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+  
+  buscarTarefasComPaginacao(tarefaParameters: any): Promise<Tarefa[]> {
+    return new Promise<Tarefa[]>((resolve, reject) => {
+      const params = new HttpParams({ fromObject: tarefaParameters });
+      this.http
+        .get<Tarefa[]>(`${this.API}/BuscarTarefas`, { params })
+        .toPromise()
+        .then((response) => {
+          resolve(response as Tarefa[]);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
   
   

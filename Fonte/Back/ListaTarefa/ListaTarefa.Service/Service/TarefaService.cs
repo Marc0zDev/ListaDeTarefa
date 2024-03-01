@@ -4,6 +4,7 @@ using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IRepository;
 using ListaTarefa.Domain.Interfaces.IServices;
+using ListaTarefa.Domain.Pagination.Filters;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -56,5 +57,21 @@ namespace ListaTarefa.Service.Service
         }
 
        
+
+        Domain.Pagination.PagedList<Tarefa> ITarefaService.GetTarefas(TarefaFiltro tarefaParameters)
+        {
+            try
+            {
+                var tarefas = Repository.GetTarefas(tarefaParameters);
+                if (tarefas == null)
+                    throw new Exception("Nenhuma tarefa encontrada");
+
+                return tarefas;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+            }
+        }
     }
 }

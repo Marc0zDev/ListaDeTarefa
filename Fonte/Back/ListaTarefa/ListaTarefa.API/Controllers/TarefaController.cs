@@ -3,6 +3,7 @@ using ListaTarefa.Domain.DTOs;
 using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IServices;
+using ListaTarefa.Domain.Pagination.Filters;
 using ListaTarefa.Service.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -149,5 +150,21 @@ namespace ListaTarefa.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("BuscarTarefas")]
+        public IActionResult GetTarefas([FromQuery] TarefaFiltro tarefaParameters)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var tarefas = _tarefaService.GetTarefas(tarefaParameters);
+                return Ok(tarefas);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }   
     }
 }

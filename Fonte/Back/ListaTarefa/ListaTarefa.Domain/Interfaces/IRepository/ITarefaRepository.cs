@@ -1,5 +1,7 @@
 ﻿using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
+using ListaTarefa.Domain.Pagination;
+using ListaTarefa.Domain.Pagination.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ namespace ListaTarefa.Domain.Interfaces.IRepository
     {
         IList<Tarefa> GetTarefaByStatus(StatusTarefa status);
         IList<Tarefa> GetTarefaDiaHoje();
+        PagedList<Tarefa> GetTarefas(TarefaFiltro tarefaParameters);
           
     }
 }

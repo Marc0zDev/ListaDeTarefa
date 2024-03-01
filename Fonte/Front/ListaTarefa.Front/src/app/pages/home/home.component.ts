@@ -9,6 +9,7 @@ import { TarefaServiceService } from '../../core/services/tarefa.service';
 })
 export class HomeComponent implements OnInit {
   tarefas: Tarefa[] = [];
+  hasTarefas: boolean = false;
 
   constructor(private tarefaService: TarefaServiceService) {}
 
@@ -17,6 +18,10 @@ export class HomeComponent implements OnInit {
       .listarTarefasDiaHoje()
       .then((response) => {
         this.tarefas = response;
+        this.hasTarefas = true;
+        if (this.tarefas.length === 0) {
+          this.hasTarefas = false;
+        }
         console.log(this.tarefas);
       })
       .catch((error) => {

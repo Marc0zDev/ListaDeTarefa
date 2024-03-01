@@ -29,6 +29,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,10 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSelectModule,
     MatDatepickerModule,
     FormsModule ,
-    MatNativeDateModule 
+    MatNativeDateModule ,
+    ButtonModule ,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [
     provideAnimationsAsync()

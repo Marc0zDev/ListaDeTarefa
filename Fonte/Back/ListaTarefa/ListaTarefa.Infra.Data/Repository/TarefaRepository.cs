@@ -1,6 +1,8 @@
 ﻿using ListaTarefa.Domain.Entities;
 using ListaTarefa.Domain.Enums;
 using ListaTarefa.Domain.Interfaces.IRepository;
+using ListaTarefa.Domain.Pagination;
+using ListaTarefa.Domain.Pagination.Filters;
 using ListaTarefa.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ListaTarefa.Infra.Data.Repository
 {
@@ -55,5 +58,32 @@ namespace ListaTarefa.Infra.Data.Repository
             }
         }
 
+        public PagedList<Tarefa> GetTarefas(TarefaFiltro tarefaParameters)
+        {
+            try
+            {
+                var tarefa = _context.Tarefas.AsQueryable();
+                if (!string.IsNullOrEmpty(tarefaParameters.Status))
+                {
+                    if (Enum.TryParse(tarefaParameters.Status, out StatusTarefa status))
+                    {
+                        
+                        tarefa = tarefa.Where(t => t.Status == status);
+                    }
+                }
+                if (!string.IsNullOrEmpty(tarefaParameters.Titulo))
+                {
+                    tarefa = tarefa.Where(t => t.Titulo.Contains(tarefaParameters.Titulo));
+                }
+                if(tarefa == null) { throw new Exception("Nenhuma tarefa encontrada.");}
+
+                var pagedList = PagedList<Tarefa>.ToPagedList(tarefa.ToList(), tarefaParameters.PageNumber, tarefaParameters.PageSize);
+                return pagedList;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Ocorreu algo ao selecionar todas as entidades:", ex);
+            }
+        }
     }
 }
